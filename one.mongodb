@@ -1,0 +1,97 @@
+// MongoDB Playground
+// To disable this template go to Settings | MongoDB | Use Default Template For Playground.
+// Make sure you are connected to enable completions and to be able to run a playground.
+// Use Ctrl+Space inside a snippet or a string literal to trigger completions.
+
+// Select the database to use.
+use('mongodbVSCodePlaygroundDB');
+
+// The drop() command destroys987654`1-09875r4e3w2q1a1   CVBall data from a collection.
+// Make sure you run it against the correct database and collection.
+// db.sales.drop();
+
+// Insert a few documents into the sales collection.
+// db.sales.insertMany([
+//   { '_id': 1, 'item': 'abc', 'price': 10, 'quantity': 2, 'date': new Date('2014-03-01T08:00:00Z') },
+//   { '_id': 2, 'item': 'jkl', 'price': 20, 'quantity': 1, 'date': new Date('2014-03-01T09:00:00Z') },
+//   { '_id': 3, 'item': 'xyz', 'price': 5, 'quantity': 10, 'date': new Date('2014-03-15T09:00:00Z') },
+//   { '_id': 4, 'item': 'xyz', 'price': 5, 'quantity':  20, 'date': new Date('2014-04-04T11:21:39.736Z') },
+//   { '_id': 5, 'item': 'abc', 'price': 10, 'quantity': 10, 'date': new Date('2014-04-04T21:23:13.331Z') },
+//   { '_id': 6, 'item': 'def', 'price': 7.5, 'quantity': 5, 'date': new Date('2015-06-04T05:08:13Z') },
+//   { '_id': 7, 'item': 'def', 'price': 7.5, 'quantity': 10, 'date': new Date('2015-09-10T08:43:00Z') },
+//   { '_id': 8, 'item': 'abc', 'price': 10, 'quantity': 5, 'date': new Date('2016-02-06T20:20:13Z') },
+// ]);
+
+// Run a find command to view items sold on April 4th, 2014.
+// db.sales.find({ date: { $gte: new Date('2014-04-04'), $lt: new Date('2014-04-05') } });
+
+// // Build an aggregation to view total sales for each product in 2014.
+// const aggregation = [
+//   { $match: { date: { $gte: new Date('2014-01-01'), $lt: new Date('2015-01-01') } } },
+//   { $group: { _id: '$item', totalSaleAmount: { $sum: { $multiply: [ '$price', '$quantity' ] } } } }
+// ];
+
+// // Run the aggregation and open a cursor to the results.
+// // Use toArray() to exhaust the cursor to return the whole result set.
+// // You can use hasNext()/next() to iterate through the cursor page by page.
+// db.sales.aggregate(aggregation);
+
+
+// Categories collection
+const categories = [
+    { _id: "5f2d3g4h5j6k7l", name: "Electronics" },
+    { _id: "8m9n0o1p2q3r4s", name: "Fashion", parent: "5f2d3g4h5j6k7l" },
+    { _id: "t5u6v7w8x9y0z", name: "Home & Kitchen", parent: "5f2d3g4h5j6k7l" },
+    { _id: "a1b2c3d4e5f6g", name: "Books" },
+    { _id: "h7i8j9k0l1m2n", name: "Music" }
+];
+
+// Products collection
+const products = [
+    { _id: "q3r4s5t6u7v8w", name: "iPhone 11", category: "5f2d3g4h5j6k7l" },
+    { _id: "x9y0z1a2b3c4d", name: "Airpods Pro", category: "5f2d3g4h5j6k7l" },
+    { _id: "e5f6g7h8i9j0k", name: "iPad Pro", category: "5f2d3g4h5j6k7l" },
+    { _id: "l1m2n3o4p5q6r", name: "T-Shirt", category: "8m9n0o1p2q3r4s" },
+    { _id: "s7t8u9v0w1x2y", name: "Jeans", category: "8m9n0o1p2q3r4s" },
+    { _id: "z3a4b5c6d7e8f", name: "Blender", category: "t5u6v7w8x9y0z" },
+    { _id: "g9h0i1j2k3l4m", name: "Toaster", category: "t5u6v7w8x9y0z" },
+    { _id: "n5o6p7q8r9s0t", name: "The Lord of the Rings", category: "a1b2c3d4e5f6g" },
+    { _id: "u1v2w3x4y5z6a", name: "Harry Potter", category: "a1b2c3d4e5f6g" },
+    { _id: "b7c8d9e0f1g2h", name: "Thriller", category: "h7i8j9k0l1m2n" },
+    { _id: "j3k4l5m6n7o8p", name: "Bad", category: "h7i8j9k0l1m2n" },
+];
+// db.category.insertMany(categories)
+// db.product.insertMany(products)
+
+
+
+
+
+
+
+
+const mongoose = require('mongoose.js');
+
+const Schema = mongoose.Schema;
+
+
+mongoose.connect('mongodb+srv://vscode_play_user:W4xvOHbdpOHETgcQ@cluster0.5j3hsbw.mongodb.net/mongodbVSCodePlaygroundDB?retryWrites=true&w=majority')
+
+
+
+const categorySchema = new Schema({
+    _id: { type: String },
+    name: { type: String },
+    parent: { type: Schema.Types.ObjectId, ref: 'Category' },
+});
+const Category = mongoose.model('Category', categorySchema);
+
+const productSchema = new Schema({
+    _id: { type: String },
+    name: { type: String },
+    category: { type: Schema.Types.ObjectId, ref: 'Category' },
+});
+const Product = mongoose.model('Product', productSchema);
+
+
+Product.find({}).populate('category')
